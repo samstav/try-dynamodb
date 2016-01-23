@@ -31,6 +31,8 @@ def create_all(client):
         except botocore.exceptions.ClientError as err:
             if 'table already exists' in repr(err).lower():
                 response = err
+            else:
+                raise
         responses.append(response)
 
     for response in responses:
