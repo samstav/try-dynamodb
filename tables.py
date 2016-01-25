@@ -10,7 +10,9 @@ For more details on provisioned throughput:
     http://amzn.to/1OD7vFZ
 
 """
+from __future__ import print_function
 
+import sys
 import time
 
 import botocore
@@ -35,12 +37,13 @@ def create_all(client):
                 raise
         responses.append(response)
 
+    # wait until created
     for response in responses:
         if isinstance(response, botocore.exceptions.ClientError):
             continue
         while response.table_status != 'ACTIVE':
             response.load()
-            time.sleep(.5)
+            time.sleep(.1)
     return responses
 
 
@@ -52,9 +55,33 @@ def delete_all(client):
         'Forum',
     ]
     responses = []
+    tables = []
     for name in table_names:
-        response = client.Table(name).delete()
+        try:
+            table = client.Table(name)
+            response = table.delete()
+        except botocore.exceptions.ClientError as err:
+            if 'resource not found' in repr(err).lower():
+                response = err
+            else:
+                raise
+        else:
+            # dont append the table if we hit a ClientError
+            tables.append(table)
         responses.append(response)
+
+    # wait until deleted
+    for table in tables:
+        while True:
+            try:
+                status = table.table_status
+                table.load()
+            except botocore.exceptions.ClientError as err:
+                if 'resource not found' in repr(err).lower():
+                    break
+            else:
+                time.sleep(.1)
+
     return responses
 
 
