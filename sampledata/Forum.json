@@ -3,19 +3,19 @@
         {
             "PutRequest": {
                 "Item": {
-                    "Name": {"S":"Amazon DynamoDB"},
-                    "Category": {"S":"Amazon Web Services"},
-                    "Threads": {"N":"2"},
-                    "Messages": {"N":"4"},
-                    "Views": {"N":"1000"}
+                    "Name": "Amazon DynamoDB",
+                    "Category": "Amazon Web Services",
+                    "Threads": 2,
+                    "Messages": 4,
+                    "Views": 1000
                 }
             }
         },
         {
             "PutRequest": {
                 "Item": {
-                    "Name": {"S":"Amazon S3"},
-                    "Category": {"S":"Amazon Web Services"}
+                    "Name": "Amazon S3",
+                    "Category": "Amazon Web Services"
                 }
             }
         }
